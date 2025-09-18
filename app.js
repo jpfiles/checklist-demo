@@ -1,22 +1,24 @@
 /* ==========================================================
-   app.js – final version (includes Lumo‑styled sorting)
+   app.js – final version (A↔Z toggle)
    ========================================================== */
 
 const { useState, useEffect } = React;
 
-/* -----------------------------------------------------------------
-   0️⃣ Helper: alphabetical sort (case‑insensitive)
-   ----------------------------------------------------------------- */
-function sortAlphabetically(arr) {
-  // Return a **new** array – never mutate the original state directly
-  return [...arr].sort((a, b) =>
+/*=== INSERT HERE ===*/
+// ------------------------------------------------------------------
+// 0️⃣ Helper: alphabetical sort (case‑insensitive, asc/desc)
+// ------------------------------------------------------------------
+function sortAlphabetically(arr, direction = "asc") {
+  const sorted = [...arr].sort((a, b) =>
     a.text.toLowerCase().localeCompare(b.text.toLowerCase())
   );
+  return direction === "desc" ? sorted.reverse() : sorted;
 }
+/*=== END INSERT ===*/
 
-/* -----------------------------------------------------------------
-   1️⃣ ChecklistItem – renders a single todo (inline‑edit enabled)
-   ----------------------------------------------------------------- */
+// ---------------------------------------------------
+// 1️⃣ ChecklistItem – renders a single todo (inline‑edit enabled)
+// ---------------------------------------------------
 function ChecklistItem({ item, onToggle, onDelete, onUpdate }) {
   const [editing, setEditing] = useState(false);
   const [tempText, setTempText] = useState(item.text);
@@ -31,7 +33,7 @@ function ChecklistItem({ item, onToggle, onDelete, onUpdate }) {
 
   const handleKey = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // prevent form submit
+      e.preventDefault();
       saveEdit();
     } else if (e.key === "Escape") {
       setTempText(item.text);
@@ -61,9 +63,9 @@ function ChecklistItem({ item, onToggle, onDelete, onUpdate }) {
   );
 }
 
-/* -----------------------------------------------------------------
-   2️⃣ Checklist – parent component that holds the list
-   ----------------------------------------------------------------- */
+// ---------------------------------------------------
+// 2️⃣ Checklist – parent component that holds the list
+// ---------------------------------------------------
 function Checklist() {
   // -------------------- persisted items --------------------
   const [items, setItems] = useState(() => {
@@ -74,7 +76,7 @@ function Checklist() {
   // -------------------- UI state --------------------
   const [newTask, setNewTask] = useState("");
   const [filter, setFilter] = useState("all");          // all | active | completed
-  const [isSorted, setIsSorted] = useState(false);     // alphabetical toggle
+  const [sortDir, setSortDir] = useState("none");       // none | asc | desc
 
   // -------------------- side‑effects --------------------
   useEffect(() => {
@@ -107,13 +109,26 @@ function Checklist() {
     );
   };
 
-  // -------------------- sorting & filtering --------------------
+  // -------------------- sort direction handler --------------------
+  const toggleSortDirection = () => {
+    setSortDir((prev) => {
+      if (prev === "none") return "asc";
+      if (prev === "asc")  return "desc";
+      return "none";
+    });
+  };
+
+  // -------------------- filtering + optional sorting --------------------
   const baseFiltered = items.filter((item) => {
     if (filter === "active") return !item.done;
     if (filter === "completed") return item.done;
-    return true; // "all"
+    return true;
   });
-  const filteredItems = isSorted ? sortAlphabetically(baseFiltered) : baseFiltered;
+
+  let filteredItems = baseFiltered;
+  if (sortDir !== "none") {
+    filteredItems = sortAlphabetically(baseFiltered, sortDir);
+  }
 
   // -------------------- UI render --------------------
   return (
@@ -141,12 +156,23 @@ function Checklist() {
           Completed
         </button>
 
-        {/* NEW SORT BUTTON */}
+        {/* ---------- SORT BUTTON WITH DIRECTION INDICATOR ---------- */}
         <button
-          className={isSorted ? "active" : ""}
-          onClick={() => setIsSorted((prev) => !prev)}
+        className={sortDir !== "none" ? "active" : ""}
+        onClick={toggleSortDirection}
+        /* The title attribute is the tooltip the user sees on hover */
+        title={
+            sortDir === "none"
+            ? "Click to sort A → Z"
+            : sortDir === "asc"
+            ? "Currently A → Z – click to reverse (Z → A)"
+            : "Currently Z → A – click to remove sorting"
+        }
         >
-          Sort A→Z
+        {/* Icon + label – always shows an arrow so the direction is obvious */}
+        {sortDir === "none" && "Sort ⇅"}
+        {sortDir === "asc" && "Sort ↑"}
+        {sortDir === "desc" && "Sort ↓"}
         </button>
       </div>
 
@@ -177,7 +203,7 @@ function Checklist() {
   );
 }
 
-/* -----------------------------------------------------------------
-   3️⃣ Render the app into the page
-   ----------------------------------------------------------------- */
+// ---------------------------------------------------
+// 3️⃣ Render the app into the page
+// ---------------------------------------------------
 ReactDOM.createRoot(document.getElementById("root")).render(<Checklist />);
