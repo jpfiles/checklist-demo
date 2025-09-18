@@ -1,0 +1,119 @@
+
+body {
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  margin: 2rem;
+  background: linear-gradient(135deg, #f9f9f9 60%, #e0e7ff 100%);
+  color: #22223b;
+  min-height: 100vh;
+}
+
+#root {
+  max-width: 500px;
+  margin: auto;
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 6px 32px 0 rgba(60, 60, 120, 0.12);
+  padding: 2rem 2.5rem 2.5rem 2.5rem;
+  margin-top: 2rem;
+}
+
+
+h1 {
+  text-align: center;
+  color: #4f46e5;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-shadow: 0 2px 8px #e0e7ff;
+}
+
+
+form {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1.5rem;
+}
+
+
+input[type="text"] {
+  flex: 1;
+  padding: .6rem 1rem;
+  border: 1.5px solid #c7d2fe;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border 0.2s;
+  outline: none;
+}
+input[type="text"]:focus {
+  border-color: #6366f1;
+  background: #f1f5ff;
+}
+
+
+button {
+  padding: .6rem 1.2rem;
+  background: linear-gradient(90deg, #6366f1 60%, #818cf8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px 0 rgba(99, 102, 241, 0.08);
+  transition: background 0.2s, transform 0.1s;
+}
+button:hover, button:focus {
+  background: linear-gradient(90deg, #4f46e5 60%, #6366f1 100%);
+  transform: translateY(-2px) scale(1.04);
+}
+
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .7rem 0.5rem;
+  border-bottom: 1px solid #e0e7ff;
+  background: rgba(99, 102, 241, 0.03);
+  border-radius: 0.4rem;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px 0 rgba(99, 102, 241, 0.04);
+}
+li:hover {
+  background: #eef2ff;
+  box-shadow: 0 2px 12px 0 rgba(99, 102, 241, 0.10);
+}
+
+
+li.completed span {
+  text-decoration: line-through;
+  color: #a5b4fc;
+  font-style: italic;
+}
+
+/* Add a subtle checkmark for completed items */
+li.completed::before {
+  content: '\2713';
+  color: #4f46e5;
+  font-weight: bold;
+  margin-right: 0.7rem;
+  font-size: 1.1rem;
+}
+
+/* Animate list item appearance */
+li {
+  animation: fadeIn 0.5s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
