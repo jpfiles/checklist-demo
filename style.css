@@ -117,3 +117,15 @@ li {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Ensure the active button gets the same hover/active look */
+.filters button.active {
+  background: linear-gradient(90deg, #4f46e5 60%, #6366f1 100%);
+}
